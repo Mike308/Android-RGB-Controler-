@@ -10,6 +10,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ public class DeviceList extends AppCompatActivity {
     private ListView deviceList;
     private BluetoothAdapter my_bluetooth = null;
     private Set<BluetoothDevice> pairedDevices;
+    public static String EXTRA_ADRESS = "device_adress";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,8 +75,25 @@ public class DeviceList extends AppCompatActivity {
 
         final ArrayAdapter adapter = new ArrayAdapter(this,android.R.layout.simple_list_item_1, list);
         deviceList.setAdapter(adapter);
+        deviceList.setOnItemClickListener(item_click);
 
     }
+
+    private AdapterView.OnItemClickListener item_click = new AdapterView.OnItemClickListener(){
+
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+            String device_name = ((TextView) view).getText().toString();
+            String mac_adress = device_name.substring(device_name.length()-17);
+            Intent mainAvitvity = new Intent(DeviceList.this,MainActivity.class);
+            mainAvitvity.putExtra(EXTRA_ADRESS,mac_adress);
+            startActivity(mainAvitvity);
+
+
+        }
+    };
+
 
 
 }
