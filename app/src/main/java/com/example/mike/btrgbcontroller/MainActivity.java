@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
         Button b = (Button)findViewById(R.id.button);
         Button blueBtn = (Button)findViewById(R.id.button4);
         final TextView text = (TextView)findViewById(R.id.textView3);
+        final TextView text2 = (TextView)findViewById(R.id.textView2);
         text.setText("Adress: "+adress);
 
         if(adress != null){
@@ -62,8 +63,11 @@ public class MainActivity extends AppCompatActivity {
                     public void colorSelected(Integer color) {
 
                         Color.colorToHSV(color,hsv);
-
-                        //text.setText("H: "+Float.toString(hsv[0])+" S: "+Float.toString(hsv[1]*100)+" V: "+Float.toString(hsv[2]*100));
+                        int h = (int)hsv[0];
+                        int s = (int)(hsv[1]*100);
+                        int v = (int)(hsv[2]*100);
+                        text2.setText("H: "+Integer.toString(h)+" S: "+Integer.toString(s)+" V: "+Integer.toString(v));
+                        sendCommand("1^"+Integer.toString(h)+"^"+Integer.toString(s)+"^"+Integer.toString(v)+"\r\n");
 
 
 
@@ -90,6 +94,24 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+    }
+
+    private void sendCommand(String cmd){
+
+        if(sock_bt!=null){
+
+            try{
+
+                sock_bt.getOutputStream().write(cmd.getBytes());
+
+            }catch (IOException e){
+
+                Toast.makeText(getApplicationContext(),"Err: "+e.toString(),Toast.LENGTH_LONG);
+
+            }
+
+        }
 
     }
 
