@@ -11,13 +11,18 @@ import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
@@ -44,8 +49,19 @@ public class MainActivity extends AppCompatActivity {
 
         Button b = (Button)findViewById(R.id.button);
         Button blueBtn = (Button)findViewById(R.id.button4);
+        Button blueBtnDisc = (Button)findViewById(R.id.button3);
+        Button animationBtn = (Button)findViewById(R.id.button5);
         final TextView text = (TextView)findViewById(R.id.textView3);
-        final TextView text2 = (TextView)findViewById(R.id.textView2);
+        final EditText speed_in = (EditText)findViewById(R.id.editText3);
+        final EditText step_in = (EditText)findViewById(R.id.editText4);
+       // final TextView text2 = (TextView)findViewById(R.id.textView2);
+        final Spinner animation_type = (Spinner)findViewById(R.id.spinner);
+        ArrayList<String> animation_list = new ArrayList<>();
+        animation_list.add(0,"Color Wheel");
+        animation_list.add(1,"Random Color Switch");
+        ArrayAdapter<String> spinner_adapter = new ArrayAdapter<String>(this,android.R.layout.simple_dropdown_item_1line,animation_list);
+        animation_type.setAdapter(spinner_adapter);
+
         text.setText("Adress: "+adress);
 
         if(adress != null){
@@ -66,8 +82,9 @@ public class MainActivity extends AppCompatActivity {
                         int h = (int)hsv[0];
                         int s = (int)(hsv[1]*100);
                         int v = (int)(hsv[2]*100);
-                        text2.setText("H: "+Integer.toString(h)+" S: "+Integer.toString(s)+" V: "+Integer.toString(v));
+                      //  text2.setText("H: "+Integer.toString(h)+" S: "+Integer.toString(s)+" V: "+Integer.toString(v));
                         sendCommand("1^"+Integer.toString(h)+"^"+Integer.toString(s)+"^"+Integer.toString(v)+"\r\n");
+
 
 
 
@@ -77,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
                 });
 
 
-                cp.setTitle("Paleta HSV");
+                cp.setTitle("HSV");
 
                 cp.show();
 
@@ -94,6 +111,51 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+        animationBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String speed_str = speed_in.getText().toString();
+                String step_str = step_in.getText().toString();
+
+                if(animation_type.getSelectedItemPosition()==0){
+
+
+
+                    sendCommand("3^"+speed_str+"^"+step_str+"\r\n");
+
+                }else if(animation_type.getSelectedItemPosition()==1){
+
+                    sendCommand("4^"+speed_str+"^"+step_str+"\r\n");
+
+
+                }
+
+            }
+        });
+
+        blueBtnDisc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(sock_bt!=null){
+
+                    try{
+
+                        sock_bt.close();
+
+                    }catch (IOException e){
+
+                        Toast.makeText(getApplicationContext(),"Error: "+e.toString(),Toast.LENGTH_LONG).show();
+                    }
+
+                }
+
+            }
+        });
+
+
 
     }
 
